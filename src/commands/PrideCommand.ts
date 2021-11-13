@@ -32,7 +32,7 @@ export default class PrideCommand implements ICommand {
                     await Util.sleep(5000);
                     const data = result.split(",")[1];
                     const buff = Buffer.from(data, "base64");
-                    const file = new MessageAttachment(buff, `${interaction.member.username}-${flair}.png`);
+                    const file = new MessageAttachment(buff, `${interaction.user.username}-${flair}.png`);
                     return await interaction.editReply({files: [file]});
                 })
                 .catch(async error => {
@@ -51,12 +51,7 @@ export default class PrideCommand implements ICommand {
                 description: "The pride flair to add to your profile picture.",
                 type: SlashCommandOptions.STRING,
                 required: true,
-                choices: [
-                    {
-                        name: "Pansexual",
-                        value: "pansexual"
-                    }
-                ],
+                autocomplete: true
             }
         ]
     };

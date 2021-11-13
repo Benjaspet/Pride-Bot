@@ -3,7 +3,7 @@ import {ColorResolvable} from "discord.js";
 export default class Util {
 
     public static getDefaultEmbedColor(): ColorResolvable {
-        return "DARK_VIVID_PINK";
+        return "#fc92d9";
     }
 
     public static sleep(ms): Promise<any> {
