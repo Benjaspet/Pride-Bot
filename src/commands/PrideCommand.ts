@@ -29,7 +29,7 @@ export default class PrideCommand implements ICommand {
             const userAvatar = interaction.member.displayAvatarURL({dynamic: false, format: "png", size: 512});
             await AvatarUtil.getFlairedAvatarAsBase64(userAvatar, flair)
                 .then(async result => {
-                    await Util.sleep(5000);
+                    await Util.sleep(1750);
                     const data = result.split(",")[1];
                     const buff = Buffer.from(data, "base64");
                     const file = new MessageAttachment(buff, `${interaction.user.username}-${flair}.png`);
