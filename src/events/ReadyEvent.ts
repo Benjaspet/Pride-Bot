@@ -5,6 +5,7 @@ import LoggerBase from "../base/LoggerBase";
 import SlashCommandUtil from "../utils/SlashCommandUtil";
 import ConfigBase from "../base/ConfigBase";
 import SlashCommandBase from "../base/SlashCommandBase";
+import AvatarUtil from "../utils/AvatarUtil";
 
 export default class ReadyEvent implements IEvent {
 
@@ -23,7 +24,6 @@ export default class ReadyEvent implements IEvent {
         this.handlePresence();
         LoggerBase.info(`Logged in as ${this.client.user.tag}.`);
         await this.handleApplicationCommands();
-
     }
 
     private handlePresence(): void {
