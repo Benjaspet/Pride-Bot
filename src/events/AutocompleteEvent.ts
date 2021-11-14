@@ -17,6 +17,7 @@ export default class AutocompleteEvent implements IEvent {
         if (!interaction.isAutocomplete()) return;
         switch (interaction.commandName) {
             case "pride":
+            case "flag":
                 const terms = [
                     "Abrosexual", "Agender", "Aromantic", "Asexual", "Bigender", "Bisexual", "Demiboy", "Demigirl",
                     "Gay", "Genderfluid", "Genderflux", "Genderqueer", "Intersex", "Lesbian", "Nonbinary", "Omnisexual",
