@@ -23,44 +23,48 @@ export default class OrientationCommand implements ICommand {
         if (interaction.commandName === this.name) {
             const type = interaction.options.getString("type");
             const query = interaction.options.getString("query");
-            if (type === "sexual") {
-                await axios.get(`https://app.ponjo.club/v1/pride/orientations?type=sexual&q=${query}`)
-                    .then(async response => {
-                       const data = response.data.data;
-                       const embed = new MessageEmbed();
-                       if (data.length === 0) { // If the array is empty.
-                           embed.setDescription("No search results found.");
-                           embed.setColor(Util.getDefaultEmbedColor());
-                           return await interaction.reply({embeds: [embed]});
-                       } else {
-                           embed.setAuthor("Search results for: " + query, data[0].flag);
-                           embed.setColor(Util.getDefaultEmbedColor());
-                           embed.setThumbnail(data[0].flag);
-                           data.forEach(element => {
-                               embed.addField(element.name, element.definition, false);
-                           });
-                           return await interaction.reply({embeds: [embed]});
-                       }
-                    });
-            } else {
-                await axios.get(`https://app.ponjo.club/v1/pride/orientations?type=romantic&q=${query}`)
-                    .then(async response => {
-                        const data = response.data.data;
-                        const embed = new MessageEmbed();
-                        if (data.length === 0) { // If the array is empty.
-                            embed.setDescription("No search results found.");
-                            embed.setColor(Util.getDefaultEmbedColor());
-                            return await interaction.reply({embeds: [embed]});
-                        } else {
-                            embed.setAuthor("Search results for: " + query, data[1].flag ? data[1].flag : data[0].flag);
-                            embed.setColor(Util.getDefaultEmbedColor());
-                            embed.setThumbnail(data[0].flag);
-                            data.forEach(element => {
-                                embed.addField(element.name, element.definition, false);
-                            });
-                            return await interaction.reply({embeds: [embed]});
-                        }
-                    });
+            try {
+                if (type === "sexual") {
+                    await axios.get(`https://app.ponjo.club/v1/pride/orientations?type=sexual&q=${query}`)
+                        .then(async response => {
+                            const data = response.data.data;
+                            const embed = new MessageEmbed();
+                            if (data.length === 0) { // If the array is empty.
+                                embed.setDescription("No search results found.");
+                                embed.setColor(Util.getDefaultEmbedColor());
+                                return await interaction.reply({embeds: [embed]});
+                            } else {
+                                embed.setAuthor("Search results for: " + query, data[0].flag);
+                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setThumbnail(data[0].flag);
+                                data.forEach(element => {
+                                    embed.addField(element.name, element.definition, false);
+                                });
+                                return await interaction.reply({embeds: [embed]});
+                            }
+                        });
+                } else {
+                    await axios.get(`https://app.ponjo.club/v1/pride/orientations?type=romantic&q=${query}`)
+                        .then(async response => {
+                            const data = response.data.data;
+                            const embed = new MessageEmbed();
+                            if (data.length === 0) { // If the array is empty.
+                                embed.setDescription("No search results found.");
+                                embed.setColor(Util.getDefaultEmbedColor());
+                                return await interaction.reply({embeds: [embed]});
+                            } else {
+                                embed.setAuthor("Search results for: " + query, data[0].flag);
+                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setThumbnail(data[0].flag);
+                                data.forEach(element => {
+                                    embed.addField(element.name, element.definition, false);
+                                });
+                                return await interaction.reply({embeds: [embed]});
+                            }
+                        });
+                }
+            } catch (error) {
+                return await interaction.reply({embeds: [new MessageEmbed().setColor(Util.getDefaultEmbedColor()).setDescription("An error occurred while searching.")]});
             }
         }
     }
