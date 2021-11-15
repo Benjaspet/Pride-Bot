@@ -28,7 +28,7 @@ export default class AutocompleteEvent implements IEvent {
                     "Questioning", "Sapphic", "Transgender", "TwoSpirit", "Xenogender"
                 ];
 
-                const filtered = terms.filter(term => term.toLowerCase().includes(focusedValue));
+                const filtered = terms.filter(term => term.toLowerCase().includes(focusedValue)).slice(0, 20);
                 return await interaction.respond(filtered.map(term => ({name: term, value: term.toLowerCase()})));
             case "orientation":
                 let queried: ApplicationCommandOptionChoice[] = [];
