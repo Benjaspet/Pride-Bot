@@ -1,32 +1,27 @@
-import {Client, MessageAttachment} from "discord.js";
+import {Client, Interaction, MessageAttachment} from "discord.js";
 import {ICommand} from "../structs/ICommand";
-import LoggerBase from "../base/LoggerBase";
+import Logger from "../Logger";
 import AvatarUtil from "../utils/AvatarUtil";
 import {SlashCommandOptions} from "../structs/ICommandOptions";
 import Util from "../utils/Util";
-import axios from "axios";
 import {Buffer} from "buffer";
 
 export default class PrideCommand implements ICommand {
 
     public name: string = "pride";
-    public once: boolean = false;
-    public enabled: boolean = true;
     public description: string = "Add pride flairs to your profile picture.";
-    public aliases: string[] = [];
-    protected client: Client;
+    private readonly client: Client;
 
     constructor(client: Client) {
-        this.enabled = true;
         this.client = client;
     }
 
-    public async execute(interaction) {
+    public async execute(interaction: Interaction): Promise<void> {
         if (!interaction.isCommand()) return;
         if (interaction.commandName === this.name) {
             await interaction.deferReply();
             const flair = interaction.options.getString("flair");
-            const userAvatar = interaction.member.displayAvatarURL({dynamic: false, format: "png", size: 512});
+            const userAvatar = interaction.user.displayAvatarURL({dynamic: false, format: "png", size: 512});
             await AvatarUtil.getFlairedAvatarAsBase64(userAvatar, flair)
                 .then(async result => {
                     await Util.sleep(1750);
@@ -36,13 +31,13 @@ export default class PrideCommand implements ICommand {
                     return await interaction.editReply({files: [file]});
                 })
                 .catch(async error => {
-                    LoggerBase.error(error);
+                    Logger.error(error);
                     return await interaction.editReply("An error occurred. Please contact a developer.");
                 });
         }
     }
 
-    public slashData: object = <object> {
+    public slashData: object = {
         name: this.name,
         description: this.description,
         options: [

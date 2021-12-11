@@ -6,7 +6,7 @@ export default class AutocompleteEvent implements IEvent {
 
     public name: keyof ClientEvents;
     public once: boolean;
-    public client: Client;
+    public readonly client: Client;
 
     constructor(client: Client, name: keyof ClientEvents, once: boolean) {
         this.client = client;
@@ -14,7 +14,7 @@ export default class AutocompleteEvent implements IEvent {
         this.name = name;
     }
 
-    public async execute(interaction: Interaction) {
+    public async execute(interaction: Interaction): Promise<void> {
         if (!interaction.isAutocomplete()) return;
         const focusedValue = interaction.options.getFocused() as string;
         switch (interaction.commandName) {

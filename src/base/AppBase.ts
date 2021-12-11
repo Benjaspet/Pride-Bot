@@ -1,17 +1,17 @@
 import {Client} from "discord.js";
-import BaseConfig from "../base/ConfigBase";
-import Util from "../utils/Util";
+import Config from "../Config";
+import Logger from "../Logger";
 
 export default class AppBase {
 
-    private client: Client;
+    private readonly client: Client;
 
     constructor(client: Client) {
         this.client = client;
     }
 
     public login(): void {
-        Util.clearConsole();
-        this.client.login(BaseConfig.get("TOKEN")).then(() => {});
+        Logger.clear();
+        this.client.login(Config.get("TOKEN")).then(() => {});
     }
 }

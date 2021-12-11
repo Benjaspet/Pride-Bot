@@ -2,21 +2,21 @@ import {Client} from "discord.js";
 import {REST} from "@discordjs/rest";
 import {Routes} from "discord-api-types/v9";
 import Util from "../utils/Util";
-import ConfigBase from "./ConfigBase";
+import Config from "../Config";
 import SlashCommandUtil from "../utils/SlashCommandUtil";
-import LoggerBase from "./LoggerBase";
+import Logger from "../Logger";
 
 export default class SlashCommandBase {
 
-    public client: Client;
+    private readonly client: Client;
     public slashData: object[];
     public action: any = {
         deploy: true,
         delete: false,
         guild: true
     };
-    private clientId: string = ConfigBase.get("CLIENT-ID");
-    private guildId: string = ConfigBase.get("GUILD-ID");
+    private clientId: string = Config.get("CLIENT-ID");
+    private guildId: string = Config.get("GUILD-ID");
 
     constructor(client: Client, slashData: object[], action: any) {
         this.slashData = slashData;
@@ -25,48 +25,48 @@ export default class SlashCommandBase {
     }
 
     private async init(): Promise<void> {
-        const rest = new REST({version: "9"}).setToken(ConfigBase.get("TOKEN"));
+        const rest = new REST({version: "9"}).setToken(Config.get("TOKEN"));
         if (this.action.deploy) {
             if (this.action.guild) {
                 try {
-                    LoggerBase.info("Refreshing all guild slash commands..");
+                    Logger.info("Refreshing all guild slash commands..");
                     await rest.put(Routes.applicationGuildCommands(this.clientId, this.guildId), {
                         body: SlashCommandUtil.getAllSlashCommandData(this.client)});
                     await Util.sleep(1000);
-                    LoggerBase.info("Successfully updated all guild slash commands.");
+                    Logger.info("Successfully updated all guild slash commands.");
                 } catch (error) {
-                    LoggerBase.error(error);
+                    Logger.error(error);
                 }
             } else {
                 try {
-                    LoggerBase.info("Refreshing all global slash commands..");
+                    Logger.info("Refreshing all global slash commands..");
                     await rest.put(Routes.applicationCommands(this.clientId), {
                         body: SlashCommandUtil.getAllSlashCommandData(this.client)
                     });
                     await Util.sleep(1000);
-                    LoggerBase.info("Successfully updated all global slash commands.");
+                    Logger.info("Successfully updated all global slash commands.");
                 } catch (error) {
-                    LoggerBase.error(error);
+                    Logger.error(error);
                 }
             }
         } else if (this.action.delete && !this.action.deploy) {
             if (this.action.guild) {
                 try {
-                    LoggerBase.info("Deleting all guild slash commands...");
+                    Logger.info("Deleting all guild slash commands...");
                     await rest.put(Routes.applicationGuildCommands(this.clientId,this.guildId), {
                         body: []});
-                    LoggerBase.info("Successfully deleted all guild slash commands.");
+                    Logger.info("Successfully deleted all guild slash commands.");
                 } catch (error) {
-                    LoggerBase.error(error);
+                    Logger.error(error);
                 }
             } else {
                 try {
-                    LoggerBase.info("Deleting all global slash commands...");
+                    Logger.info("Deleting all global slash commands...");
                     await rest.put(Routes.applicationCommands(this.clientId), {
                         body: []});
-                    LoggerBase.info("Successfully deleted all global slash commands.");
+                    Logger.info("Successfully deleted all global slash commands.");
                 } catch (error) {
-                    LoggerBase.error(error);
+                    Logger.error(error);
                 }
             }
         }

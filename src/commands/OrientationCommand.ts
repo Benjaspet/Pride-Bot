@@ -1,4 +1,4 @@
-import {Client, MessageEmbed} from "discord.js";
+import {Client, Interaction, MessageEmbed} from "discord.js";
 import {ICommand} from "../structs/ICommand";
 import {SlashCommandOptions} from "../structs/ICommandOptions";
 import axios from "axios";
@@ -7,18 +7,14 @@ import Util from "../utils/Util";
 export default class OrientationCommand implements ICommand {
 
     public name: string = "orientation";
-    public once: boolean = false;
-    public enabled: boolean = true;
     public description: string = "Get information on a sexual or romantic orientation.";
-    public aliases: string[] = [];
-    protected client: Client;
+    private readonly client: Client;
 
     constructor(client: Client) {
-        this.enabled = true;
         this.client = client;
     }
 
-    public async execute(interaction) {
+    public async execute(interaction: Interaction): Promise<void> {
         if (!interaction.isCommand()) return;
         if (interaction.commandName === this.name) {
             const type = interaction.options.getString("type");
@@ -69,7 +65,7 @@ export default class OrientationCommand implements ICommand {
         }
     }
 
-    public slashData: object = <object> {
+    public slashData: object = {
         name: this.name,
         description: this.description,
         options: [

@@ -1,4 +1,4 @@
-import {Client, MessageEmbed} from "discord.js";
+import {Client, Interaction, MessageEmbed} from "discord.js";
 import {ICommand} from "../structs/ICommand";
 import Util from "../utils/Util";
 import {SlashCommandOptions} from "../structs/ICommandOptions";
@@ -6,18 +6,14 @@ import {SlashCommandOptions} from "../structs/ICommandOptions";
 export default class FlagCommand implements ICommand {
 
     public name: string = "flag";
-    public once: boolean = false;
-    public enabled: boolean = true;
     public description: string = "Obtain an image of any pride flag.";
-    public aliases: string[] = [];
-    protected client: Client;
+    private readonly client: Client;
 
     constructor(client: Client) {
-        this.enabled = true;
         this.client = client;
     }
 
-    public async execute(interaction) {
+    public async execute(interaction: Interaction): Promise<void> {
         if (!interaction.isCommand()) return;
         if (interaction.commandName === this.name) {
             const flag = interaction.options.getString("type");
@@ -29,7 +25,7 @@ export default class FlagCommand implements ICommand {
         }
     }
 
-    public slashData: object = <object> {
+    public slashData: object = {
         name: this.name,
         description: this.description,
         options: [

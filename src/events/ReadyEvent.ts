@@ -1,17 +1,16 @@
 import {IEvent} from "../structs/IEvent";
 import {Client, ClientEvents, Presence} from "discord.js";
 import Util from "../utils/Util";
-import LoggerBase from "../base/LoggerBase";
+import Logger from "../Logger";
 import SlashCommandUtil from "../utils/SlashCommandUtil";
-import ConfigBase from "../base/ConfigBase";
+import Config from "../Config";
 import SlashCommandBase from "../base/SlashCommandBase";
-import AvatarUtil from "../utils/AvatarUtil";
 
 export default class ReadyEvent implements IEvent {
 
     public name: keyof ClientEvents;
     public once: boolean;
-    public client: Client;
+    public readonly client: Client;
 
     constructor(client: Client, name: keyof ClientEvents, once: boolean) {
         this.name = name;
@@ -22,7 +21,7 @@ export default class ReadyEvent implements IEvent {
     public async execute(): Promise<void> {
         Util.clearConsole();
         this.handlePresence();
-        LoggerBase.info(`Logged in as ${this.client.user.tag}.`);
+        Logger.info(`Logged in as ${this.client.user.tag}.`);
         await this.handleApplicationCommands();
     }
 
@@ -34,37 +33,37 @@ export default class ReadyEvent implements IEvent {
     }
 
     private async updatePresence(): Promise<Presence | undefined> {
-        const activity = ConfigBase.get("ACTIVITY");
+        const activity = Config.get("ACTIVITY");
         return this.client.user.setActivity({type: "WATCHING", name: activity});
     }
 
     private async handleApplicationCommands() {
-        if (JSON.parse(ConfigBase.get("DEPLOY-APPLICATION-COMMANDS-GUILD")) == true) {
+        if (JSON.parse(Config.get("DEPLOY-APPLICATION-COMMANDS-GUILD")) == true) {
             await new SlashCommandBase(this.client, SlashCommandUtil.getAllSlashCommandData(this.client), {
                 deploy: true,
                 delete: false,
                 guild: true
             });
-        } else if (JSON.parse(ConfigBase.get("DEPLOY-APPLICATION-COMMANDS-GLOBAL")) == true) {
+        } else if (JSON.parse(Config.get("DEPLOY-APPLICATION-COMMANDS-GLOBAL")) == true) {
             await new SlashCommandBase(this.client, SlashCommandUtil.getAllSlashCommandData(this.client), {
                 deploy: true,
                 delete: false,
                 guild: false
             });
-        } else if (JSON.parse(ConfigBase.get("DELETE-APPLICATION-COMMANDS-GUILD")) == true) {
+        } else if (JSON.parse(Config.get("DELETE-APPLICATION-COMMANDS-GUILD")) == true) {
             await new SlashCommandBase(this.client, SlashCommandUtil.getAllSlashCommandData(this.client), {
                 deploy: false,
                 delete: true,
                 guild: true
             });
-        } else if (JSON.parse(ConfigBase.get("DELETE-APPLICATION-COMMANDS-GLOBAL")) == true) {
+        } else if (JSON.parse(Config.get("DELETE-APPLICATION-COMMANDS-GLOBAL")) == true) {
             await new SlashCommandBase(this.client, SlashCommandUtil.getAllSlashCommandData(this.client), {
                 deploy: false,
                 delete: true,
                 guild: false
             });
         } else {
-            LoggerBase.info("Application commands loaded.");
+            Logger.info("Application commands loaded.");
         }
     }
 }

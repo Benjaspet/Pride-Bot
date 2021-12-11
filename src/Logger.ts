@@ -1,4 +1,4 @@
-export default class LoggerBase {
+export default class Logger {
 
     public static info(message: string) {
         console.log(`[Pronoun Bot] [INFO] ${message}`);
@@ -10,5 +10,9 @@ export default class LoggerBase {
 
     public static error(message: string): void {
         console.log(`[Pronoun Bot] [ERROR] ${message}`)
+    }
+
+    public static clear(): void {
+        console.clear();
     }
 }
