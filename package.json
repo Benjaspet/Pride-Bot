@@ -1,7 +1,7 @@
 {
   "name": "pronoun-bot",
   "author": "Ben Petrillo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "src/PronounBot.ts",
   "description": "A Discord bot to add pride flairs to profile pictures.",
   "scripts": {
