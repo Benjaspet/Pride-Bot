@@ -1,16 +1,63 @@
-import {Client, Interaction, MessageEmbed} from "discord.js";
-import {ICommand} from "../structs/ICommand";
-import {SlashCommandOptions} from "../structs/ICommandOptions";
+/*
+ * Copyright © 2022 Ben Petrillo. All rights reserved.
+ *
+ * Project licensed under the MIT License: https://www.mit.edu/~amini/LICENSE.md
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * All portions of this software are available for public use, provided that
+ * credit is given to the original author(s).
+ */
+
+import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
+import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import axios from "axios";
-import Util from "../utils/Util";
+import Utilities from "../utils/Utilities";
+import Command from "../structs/Command";
+import EmbedUtil from "../utils/EmbedUtil";
 
-export default class OrientationCommand implements ICommand {
+export default class OrientationCommand extends Command {
 
-    public name: string = "orientation";
-    public description: string = "Get information on a sexual or romantic orientation.";
     private readonly client: Client;
 
     constructor(client: Client) {
+        super("orientation", {
+            name: "orientation",
+            description: "Get information on a sexual or romantic orientation.",
+            options: [
+                {
+                    name: "type",
+                    description: "The type of orientation to search for.",
+                    type: ApplicationCommandOptionTypes.STRING,
+                    required: true,
+                    autocomplete: false,
+                    choices: [
+                        {
+                            name: "Sexual",
+                            value: "sexual"
+                        },
+                        {
+                            name: "Romantic",
+                            value: "romantic"
+                        }
+                    ]
+                },
+                {
+                    name: "query",
+                    description: "The search query.",
+                    type: ApplicationCommandOptionTypes.STRING,
+                    required: true,
+                    autocomplete: true
+                }
+            ]
+        })
         this.client = client;
     }
 
@@ -27,11 +74,11 @@ export default class OrientationCommand implements ICommand {
                             const embed = new MessageEmbed();
                             if (data.length === 0) { // If the array is empty.
                                 embed.setDescription("No search results found.");
-                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setColor(Utilities.getDefaultEmbedColor());
                                 return await interaction.reply({embeds: [embed]});
                             } else {
                                 embed.setAuthor("Search results for: " + query, data[0].flag);
-                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setColor(Utilities.getDefaultEmbedColor());
                                 embed.setThumbnail(data[0].flag);
                                 data.forEach(element => {
                                     embed.addField(element.name, element.definition, false);
@@ -46,11 +93,11 @@ export default class OrientationCommand implements ICommand {
                             const embed = new MessageEmbed();
                             if (data.length === 0) { // If the array is empty.
                                 embed.setDescription("No search results found.");
-                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setColor(Utilities.getDefaultEmbedColor());
                                 return await interaction.reply({embeds: [embed]});
                             } else {
                                 embed.setAuthor("Search results for: " + query, data[0].flag);
-                                embed.setColor(Util.getDefaultEmbedColor());
+                                embed.setColor(Utilities.getDefaultEmbedColor());
                                 embed.setThumbnail(data[0].flag);
                                 data.forEach(element => {
                                     embed.addField(element.name, element.definition, false);
@@ -60,39 +107,16 @@ export default class OrientationCommand implements ICommand {
                         });
                 }
             } catch (error) {
-                return await interaction.reply({embeds: [new MessageEmbed().setColor(Util.getDefaultEmbedColor()).setDescription("An error occurred while searching.")]});
+                return await interaction.reply({embeds: [EmbedUtil.getDefaultEmbed("An error occurred while searching.")]});
             }
         }
     }
 
-    public slashData: object = {
-        name: this.name,
-        description: this.description,
-        options: [
-            {
-                name: "type",
-                description: "The type of orientation to search for.",
-                type: SlashCommandOptions.STRING,
-                required: true,
-                autocomplete: false,
-                choices: [
-                    {
-                        name: "Sexual",
-                        value: "sexual"
-                    },
-                    {
-                        name: "Romantic",
-                        value: "romantic"
-                    }
-                ]
-            },
-            {
-                name: "query",
-                description: "The search query.",
-                type: SlashCommandOptions.STRING,
-                required: true,
-                autocomplete: true
-            }
-        ]
-    };
+    public getName(): string {
+        return this.name;
+    }
+
+    public getCommandData(): ApplicationCommandData {
+        return this.data;
+    }
 }

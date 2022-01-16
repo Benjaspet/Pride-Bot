@@ -16,20 +16,32 @@
  * credit is given to the original author(s).
  */
 
-import {Client} from "discord.js";
+import {Client, Collection} from "discord.js";
+import {ApplicationCommand} from "../types/ApplicationCommand";
+import Command from "../structs/Command";
+import FlagCommand from "../commands/FlagCommand";
 import PrideCommand from "../commands/PrideCommand";
 import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
 import OrientationCommand from "../commands/OrientationCommand";
 
-export default class SlashCommandUtil {
+export default class CommandManager {
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+    public static commands: Collection<string, ApplicationCommand> = new Collection<string, ApplicationCommand>();
+    private readonly client: Client;
+
+    constructor(client: Client) {
+        this.client = client;
+        CommandManager.registerCommands([
+            new FlagCommand(client),
+            new PrideCommand(client),
+            new PronounsCommand(client),
+            new OrientationCommand(client)
+        ]);
+    }
+
+    private static registerCommands(commands: Command[]): void {
+        for (const command of commands) {
+            CommandManager.commands.set(command.getName(), command);
+        }
     }
 }

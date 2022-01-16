@@ -16,20 +16,10 @@
  * credit is given to the original author(s).
  */
 
-import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+import {ApplicationCommandData, CommandInteraction} from "discord.js";
 
-export default class SlashCommandUtil {
-
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
-    }
+export interface ApplicationCommand {
+    getName(): string,
+    getCommandData(): ApplicationCommandData,
+    execute(event: CommandInteraction): void
 }

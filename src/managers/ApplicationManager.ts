@@ -17,19 +17,19 @@
  */
 
 import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+import Logger from "../utils/Logger";
+import Config from "../utils/Config";
 
-export default class SlashCommandUtil {
+export default class ApplicationManager {
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+    private readonly client: Client;
+
+    constructor(client: Client) {
+        this.client = client;
+    }
+
+    public login(): void {
+        Logger.clear();
+        this.client.login(Config.get("TOKEN")).then(() => {});
     }
 }

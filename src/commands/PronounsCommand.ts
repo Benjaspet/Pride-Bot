@@ -1,14 +1,34 @@
-import {Client, Interaction, MessageEmbed} from "discord.js";
-import {ICommand} from "../structs/ICommand";
-import Util from "../utils/Util";
+/*
+ * Copyright © 2022 Ben Petrillo. All rights reserved.
+ *
+ * Project licensed under the MIT License: https://www.mit.edu/~amini/LICENSE.md
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * All portions of this software are available for public use, provided that
+ * credit is given to the original author(s).
+ */
 
-export default class PronounsCommand implements ICommand {
+import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
+import Utilities from "../utils/Utilities";
+import Command from "../structs/Command";
 
-    public name: string = "pronouns";
-    public description: string = "View a list of common pronouns.";
+export default class PronounsCommand extends Command {
+
     private readonly client: Client;
 
     constructor(client: Client) {
+        super("pronouns", {
+            name: "pronouns",
+            description: "View a list of common pronouns."
+        })
         this.client = client;
     }
 
@@ -17,7 +37,7 @@ export default class PronounsCommand implements ICommand {
         if (interaction.commandName === this.name) {
             const embed = new MessageEmbed()
                 .setTitle("Common Pronouns")
-                .setColor(Util.getDefaultEmbedColor())
+                .setColor(Utilities.getDefaultEmbedColor())
                 .setThumbnail(this.client.user.displayAvatarURL({dynamic: true, size: 256}))
                 .setDescription("Pronouns are words that refer to either the people talking (like you or I) or someone " +
                     "or something that is being talked about (like she, they, and this). Gender pronouns (like he or " +
@@ -52,8 +72,11 @@ export default class PronounsCommand implements ICommand {
         }
     }
 
-    public slashData: object = {
-        name: this.name,
-        description: this.description
-    };
+    public getName(): string {
+        return this.name;
+    }
+
+    public getCommandData(): ApplicationCommandData {
+        return this.data;
+    }
 }

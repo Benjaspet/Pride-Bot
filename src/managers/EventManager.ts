@@ -17,19 +17,24 @@
  */
 
 import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+import ReadyEvent from "../events/ReadyEvent";
+import InteractionEvent from "../events/InteractionEvent";
 
-export default class SlashCommandUtil {
+export default class EventManager {
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+    private readonly client: Client;
+
+    constructor(client: Client) {
+        this.client = client;
+        this.initAllEvents().then(() => {});
+    }
+
+    private async initAllEvents(): Promise<any> {
+        this.client.on("ready", async () => {
+            await new ReadyEvent(this.client, "ready", true).execute();
+        });
+        this.client.on("interactionCreate", async interaction => {
+            await new InteractionEvent(this.client, "interactionCreate", false).execute(interaction);
+        });
     }
 }

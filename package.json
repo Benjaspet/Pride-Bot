@@ -2,11 +2,11 @@
   "name": "pronoun-bot",
   "author": "Ben Petrillo",
   "version": "1.1.0",
-  "main": "src/PronounBot.ts",
+  "main": "src/PrideBot.ts",
   "description": "A Discord bot to add pride flairs to profile pictures.",
   "scripts": {
-    "start": "ts-node src/PronounBot.ts",
-    "start:dev": "nodemon src/PronounBot.ts"
+    "start": "ts-node src/PrideBot.ts",
+    "start:dev": "nodemon src/PrideBot.ts"
   },
   "dependencies": {
     "@discordjs/rest": "^0.1.0-canary.0",

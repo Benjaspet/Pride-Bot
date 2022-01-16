@@ -1,18 +1,46 @@
-import {Client, Interaction, MessageAttachment} from "discord.js";
-import {ICommand} from "../structs/ICommand";
-import Logger from "../Logger";
-import AvatarUtil from "../utils/AvatarUtil";
-import {SlashCommandOptions} from "../structs/ICommandOptions";
-import Util from "../utils/Util";
+/*
+ * Copyright © 2022 Ben Petrillo. All rights reserved.
+ *
+ * Project licensed under the MIT License: https://www.mit.edu/~amini/LICENSE.md
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * All portions of this software are available for public use, provided that
+ * credit is given to the original author(s).
+ */
+
+import {ApplicationCommandData, Client, Interaction, MessageAttachment} from "discord.js";
+import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {Buffer} from "buffer";
+import Logger from "../utils/Logger";
+import Utilities from "../utils/Utilities";
+import Command from "../structs/Command";
 
-export default class PrideCommand implements ICommand {
+export default class PrideCommand extends Command {
 
-    public name: string = "pride";
-    public description: string = "Add pride flairs to your profile picture.";
     private readonly client: Client;
 
     constructor(client: Client) {
+        super("pride", {
+            name: "pride",
+            description: "Add pride flairs to your profile picture.",
+            options: [
+                {
+                    name: "flair",
+                    description: "The pride flair to add to your profile picture.",
+                    type: ApplicationCommandOptionTypes.STRING,
+                    required: true,
+                    autocomplete: true
+                }
+            ]
+        })
         this.client = client;
     }
 
@@ -22,9 +50,8 @@ export default class PrideCommand implements ICommand {
             await interaction.deferReply();
             const flair = interaction.options.getString("flair");
             const userAvatar = interaction.user.displayAvatarURL({dynamic: false, format: "png", size: 512});
-            await AvatarUtil.getFlairedAvatarAsBase64(userAvatar, flair)
+            await Utilities.getFlairedAvatarAsBase64(userAvatar, flair)
                 .then(async result => {
-                    await Util.sleep(1750);
                     const data = result.split(",")[1];
                     const buff = Buffer.from(data, "base64");
                     const file = new MessageAttachment(buff, `${interaction.user.username}-${flair}.png`);
@@ -37,17 +64,11 @@ export default class PrideCommand implements ICommand {
         }
     }
 
-    public slashData: object = {
-        name: this.name,
-        description: this.description,
-        options: [
-            {
-                name: "flair",
-                description: "The pride flair to add to your profile picture.",
-                type: SlashCommandOptions.STRING,
-                required: true,
-                autocomplete: true
-            }
-        ]
-    };
+    public getName(): string {
+        return this.name;
+    }
+
+    public getCommandData(): ApplicationCommandData {
+        return this.data;
+    }
 }

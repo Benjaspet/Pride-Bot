@@ -16,20 +16,14 @@
  * credit is given to the original author(s).
  */
 
-import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+import {MessageEmbed} from "discord.js";
+import Utilities from "./Utilities";
 
-export default class SlashCommandUtil {
+export default class EmbedUtil {
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+    public static getDefaultEmbed(description: string): MessageEmbed {
+        return new MessageEmbed()
+            .setDescription(description)
+            .setColor(Utilities.getDefaultEmbedColor())
     }
 }

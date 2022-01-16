@@ -16,20 +16,19 @@
  * credit is given to the original author(s).
  */
 
-import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+import {config} from "dotenv";
 
-export default class SlashCommandUtil {
+config();
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+export default class Config {
+
+    /**
+     * Get any value from the config.
+     * @param value
+     * @return any
+     */
+
+    public static get(value: string): any {
+        return process.env[value];
     }
 }

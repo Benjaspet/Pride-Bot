@@ -16,20 +16,42 @@
  * credit is given to the original author(s).
  */
 
-import {Client} from "discord.js";
-import PrideCommand from "../commands/PrideCommand";
-import PronounsCommand from "../commands/PronounsCommand";
-import FlagCommand from "../commands/FlagCommand";
-import OrientationCommand from "../commands/OrientationCommand";
+export default class Logger {
 
-export default class SlashCommandUtil {
+    /**
+     * Log information to the console.
+     * @param message
+     */
 
-    public static getAllSlashCommandCommandData(client: Client): object[] {
-        return [
-            new FlagCommand(client).getCommandData(),
-            new OrientationCommand(client).getCommandData(),
-            new PrideCommand(client).getCommandData(),
-            new PronounsCommand(client).getCommandData()
-        ];
+    public static info(message: string) {
+        console.log(`[Pronoun Bot] [INFO] ${message}`);
+    }
+
+    /**
+     * Log a warning to the console.
+     * @param message
+     */
+
+    public static warn(message: string): void {
+        console.log(`[Pronoun Bot] [WARNING] ${message}`)
+    }
+
+    /**
+     * Log an error to the console.
+     * @param message
+     * @return void
+     */
+
+    public static error(message: string): void {
+        console.log(`[Pronoun Bot] [ERROR] ${message}`)
+    }
+
+    /**
+     * Clear the console.
+     * @return void
+     */
+
+    public static clear(): void {
+        console.clear();
     }
 }
