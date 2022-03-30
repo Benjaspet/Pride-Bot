@@ -23,6 +23,7 @@ import FlagCommand from "../commands/FlagCommand";
 import PrideCommand from "../commands/PrideCommand";
 import PronounsCommand from "../commands/PronounsCommand";
 import OrientationCommand from "../commands/OrientationCommand";
+import LGBTQMemeCommand from "../commands/LGBTQMemeCommand";
 
 export default class CommandManager {
 
@@ -33,9 +34,10 @@ export default class CommandManager {
         this.client = client;
         CommandManager.registerCommands([
             new FlagCommand(client),
+            new LGBTQMemeCommand(client),
+            new OrientationCommand(client),
             new PrideCommand(client),
-            new PronounsCommand(client),
-            new OrientationCommand(client)
+            new PronounsCommand(client)
         ]);
     }
 
