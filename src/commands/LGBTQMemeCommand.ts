@@ -16,9 +16,10 @@
  * credit is given to the original author(s).
  */
 
-import Command from "../structs/Command";
 import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
+import Command from "../structs/Command";
 import Utilities from "../utils/Utilities";
+import fetch from "node-fetch";
 
 export default class LGBTQMemeCommand extends Command {
 

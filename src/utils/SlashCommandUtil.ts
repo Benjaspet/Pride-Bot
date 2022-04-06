@@ -21,12 +21,14 @@ import PrideCommand from "../commands/PrideCommand";
 import PronounsCommand from "../commands/PronounsCommand";
 import FlagCommand from "../commands/FlagCommand";
 import OrientationCommand from "../commands/OrientationCommand";
+import LGBTQMemeCommand from "../commands/LGBTQMemeCommand";
 
 export default class SlashCommandUtil {
 
     public static getAllSlashCommandCommandData(client: Client): object[] {
         return [
             new FlagCommand(client).getCommandData(),
+            new LGBTQMemeCommand(client).getCommandData(),
             new OrientationCommand(client).getCommandData(),
             new PrideCommand(client).getCommandData(),
             new PronounsCommand(client).getCommandData()
