@@ -16,7 +16,7 @@
  * credit is given to the original author(s).
  */
 
-import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
+import {ApplicationCommandData, Client, CommandInteraction, MessageEmbed} from "discord.js";
 import Command from "../structs/Command";
 import Utilities from "../utils/Utilities";
 import fetch from "node-fetch";
@@ -33,27 +33,24 @@ export default class LGBTQMemeCommand extends Command {
         this.client = client;
     }
 
-    public async execute(interaction: Interaction): Promise<void> {
-        if (!interaction.isCommand()) return;
-        if (interaction.commandName === this.name) {
-            await fetch("https://meme-api.herokuapp.com/gimme/lgbtmemes")
-                .then(response => response.json())
-                .then(async data => {
-                    return void await interaction.reply({
-                        embeds: [
-                            new MessageEmbed()
-                                .setTitle(data.title)
-                                .setColor(Utilities.getDefaultEmbedColor())
-                                .setImage(data.url)
-                                .setFooter({text: "Upvotes: " + data.ups + " | Posted by: " + data.author})
-                        ]
-                    });
-                }).catch(async () => {
-                    return void await interaction.reply({
-                        content: "Unable to fetch a meme at this time."
-                    });
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        await fetch("https://meme-api.com/gimme/lgbtmemes")
+            .then(response => response.json())
+            .then(async data => {
+                return void await interaction.reply({
+                    embeds: [
+                        new MessageEmbed()
+                            .setTitle(data.title)
+                            .setColor(Utilities.getDefaultEmbedColor())
+                            .setImage(data.url)
+                            .setFooter({text: "Upvotes: " + data.ups + " | Posted by: " + data.author})
+                    ]
                 });
-        }
+            }).catch(async () => {
+                return void await interaction.reply({
+                    content: "Unable to fetch a meme at this time."
+                });
+            });
     }
 
     public getName(): string {

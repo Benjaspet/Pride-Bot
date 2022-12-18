@@ -16,7 +16,7 @@
  * credit is given to the original author(s).
  */
 
-import {ApplicationCommandData, Client, Interaction, MessageAttachment} from "discord.js";
+import {ApplicationCommandData, Client, CommandInteraction, MessageAttachment} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
 import {Buffer} from "buffer";
 import Logger from "../utils/Logger";
@@ -44,24 +44,21 @@ export default class PrideCommand extends Command {
         this.client = client;
     }
 
-    public async execute(interaction: Interaction): Promise<void> {
-        if (!interaction.isCommand()) return;
-        if (interaction.commandName === this.name) {
-            await interaction.deferReply();
-            const flair = interaction.options.getString("flair");
-            const userAvatar = interaction.user.displayAvatarURL({dynamic: false, format: "png", size: 512});
-            await Utilities.getFlairedAvatarAsBase64(userAvatar, flair)
-                .then(async result => {
-                    const data = result.split(",")[1];
-                    const buff = Buffer.from(data, "base64");
-                    const file = new MessageAttachment(buff, `${interaction.user.username}-${flair}.png`);
-                    return await interaction.editReply({files: [file]});
-                })
-                .catch(async error => {
-                    Logger.error(error);
-                    return await interaction.editReply("An error occurred. Please contact a developer.");
-                });
-        }
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        await interaction.deferReply();
+        const flair: string = interaction.options.getString("flair");
+        const userAvatar: string  = interaction.user.displayAvatarURL({dynamic: false, format: "png", size: 512});
+        await Utilities.getFlairedAvatarAsBase64(userAvatar, flair)
+            .then(async result => {
+                const data: any = result.split(",")[1];
+                const buff: any = Buffer.from(data, "base64");
+                const file: any = new MessageAttachment(buff, `${interaction.user.username}-${flair}.png`);
+                return void await interaction.editReply({files: [file]});
+            })
+            .catch(async error => {
+                Logger.error(error);
+                return void await interaction.editReply("An error occurred. Please contact a developer.");
+            });
     }
 
     public getName(): string {

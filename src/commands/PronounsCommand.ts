@@ -16,7 +16,7 @@
  * credit is given to the original author(s).
  */
 
-import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
+import {ApplicationCommandData, Client, CommandInteraction, MessageEmbed} from "discord.js";
 import Utilities from "../utils/Utilities";
 import Command from "../structs/Command";
 
@@ -32,44 +32,44 @@ export default class PronounsCommand extends Command {
         this.client = client;
     }
 
-    public async execute(interaction: Interaction): Promise<void> {
-        if (!interaction.isCommand()) return;
-        if (interaction.commandName === this.name) {
-            const embed = new MessageEmbed()
-                .setTitle("Common Pronouns")
-                .setColor(Utilities.getDefaultEmbedColor())
-                .setThumbnail(this.client.user.displayAvatarURL({dynamic: true, size: 256}))
-                .setDescription("Pronouns are words that refer to either the people talking (like you or I) or someone " +
-                    "or something that is being talked about (like she, they, and this). Gender pronouns (like he or " +
-                    "them) specifically refer to people that you are talking about. You can view some of the most common " +
-                    "pronouns below. NOTE: One can still be non-binary while using pronouns that are associated with " +
-                    "their gender assigned at birth.")
-                .addFields([
-                    {
-                        name: "He/Him/His",
-                        value: "He said he would rather do it himself." + "\n" + "Who is he referring to?",
-                        inline: false
-                    },
-                    {
-                        name: "She/Her/Hers",
-                        value: "She said she would rather do it herself." + "\n" + "Who is she referring to?",
-                        inline: false
-                    },
-                    {
-                        name: "They/Them/Theirs (non-gender-binding)",
-                        value: "They said they would rather do it themselves." + "\n" + "Who are they referring to?",
-                        inline: false
-                    },
-                    {
-                        name: "It/It/Its",
-                        value: "It said it would rather do it itself." + "\n" + "Who is it referring to?",
-                        inline: false
-                    }
-                ])
-                .setTimestamp()
-                .setFooter("Pronoun Bot", this.client.user.displayAvatarURL({dynamic: true}));
-            return await interaction.reply({embeds: [embed]});
-        }
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        const embed: MessageEmbed = new MessageEmbed()
+            .setTitle("Common Pronouns")
+            .setColor(Utilities.getDefaultEmbedColor())
+            .setThumbnail(this.client.user.displayAvatarURL({dynamic: true, size: 256}))
+            .setDescription("Pronouns are words that refer to either the people talking (like you or I) or someone " +
+                "or something that is being talked about (like she, they, and this). Gender pronouns (like he or " +
+                "them) specifically refer to people that you are talking about. You can view some of the most common " +
+                "pronouns below. NOTE: One can still be non-binary while using pronouns that are associated with " +
+                "their gender assigned at birth.")
+            .addFields([
+                {
+                    name: "He/Him/His",
+                    value: "He said he would rather do it himself." + "\n" + "Who is he referring to?",
+                    inline: false
+                },
+                {
+                    name: "She/Her/Hers",
+                    value: "She said she would rather do it herself." + "\n" + "Who is she referring to?",
+                    inline: false
+                },
+                {
+                    name: "They/Them/Theirs (non-gender-binding)",
+                    value: "They said they would rather do it themselves." + "\n" + "Who are they referring to?",
+                    inline: false
+                },
+                {
+                    name: "It/It/Its",
+                    value: "It said it would rather do it itself." + "\n" + "Who is it referring to?",
+                    inline: false
+                }
+            ])
+            .setTimestamp()
+            .setFooter({
+                text: "Pronoun Bot",
+                iconURL: this.client.user.displayAvatarURL({dynamic: true})
+            });
+        return void await interaction.reply({embeds: [embed]});
     }
 
     public getName(): string {

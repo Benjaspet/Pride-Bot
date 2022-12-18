@@ -16,9 +16,9 @@
  * credit is given to the original author(s).
  */
 
-import {ApplicationCommandData, Client, Interaction, MessageEmbed} from "discord.js";
-import Command from "../structs/Command";
+import {ApplicationCommandData, Client, CommandInteraction, MessageEmbed} from "discord.js";
 import {ApplicationCommandOptionTypes} from "discord.js/typings/enums";
+import Command from "../structs/Command";
 import Utilities from "../utils/Utilities";
 
 export default class FlagCommand extends Command {
@@ -42,16 +42,13 @@ export default class FlagCommand extends Command {
         this.client = client;
     }
 
-    public async execute(interaction: Interaction): Promise<void> {
-        if (!interaction.isCommand()) return;
-        if (interaction.commandName === this.name) {
-            const flag = interaction.options.getString("type");
-            const embed = new MessageEmbed()
-                .setTitle(`${Utilities.capitalize(flag)} Flag`)
-                .setColor(Utilities.getDefaultEmbedColor())
-                .setImage(`https://app.ponjo.club/v1/pride/flags/${flag.toLowerCase()}`)
-            return await interaction.reply({embeds: [embed]});
-        }
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        const flag: string = interaction.options.getString("type");
+        const embed: MessageEmbed = new MessageEmbed()
+            .setTitle(`${Utilities.capitalize(flag)} Flag`)
+            .setColor(Utilities.getDefaultEmbedColor())
+            .setImage(`https://app.ponjo.club/v1/pride/flags/${flag.toLowerCase()}`)
+        return void await interaction.reply({embeds: [embed]});
     }
 
     public getName(): string {
